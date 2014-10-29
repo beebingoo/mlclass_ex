@@ -19,6 +19,8 @@ for iter = 1:num_iters
 
 
 
+    S = X*theta-y;
+    theta = theta - alpha/m*X'*S;
 
 
 
