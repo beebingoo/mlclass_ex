@@ -20,7 +20,17 @@ idx = zeros(size(X,1), 1);
 %
 % Note: You can use a for-loop over the examples to compute this.
 %
-
+short = zeros(size(X,1), 1);
+idx = idx + 1;
+for i=1:size(X,1)
+    short(i) = norm(X(i,:) - centroids(1,:));
+    for j=1:K
+        if (short(i) > norm(X(i,:) - centroids(j,:)))
+            idx(i) = j; 
+            short(i) = norm(X(i,:) - centroids(j,:));
+        end
+    end
+end
 
 
 

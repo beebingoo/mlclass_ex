@@ -24,11 +24,15 @@ centroids = zeros(K, n);
 %               centroid i.
 %
 % Note: You can use a for-loop over the centroids to compute this.
-%
-
-
-
-
+% Method 1:
+% for i=1:K
+%     Y = (idx == i);
+%     centroids(i,:) = Y'*X/sum(Y);
+% end
+% Method 2:
+% Y = repmat(idx,1,K) == repmat([1:K],m,1);
+Y = (idx==[1:K]);
+centroids = Y'*X./sum(Y)';
 
 
 
