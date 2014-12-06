@@ -39,25 +39,30 @@ Theta_grad = zeros(size(Theta));
 %        Theta_grad - num_users x num_features matrix, containing the 
 %                     partial derivatives w.r.t. to each element of Theta
 %
-vari = (X*Theta' - Y).*R;
-J = sum(sum(vari.^2))/2;
-for i=1:size(X,1)
-    for j=1:size(Theta,1)
-        idx = find(R(i, :)==1);
-        Ttemp = Theta(idx, :);
-        Ytemp = Y(i, idx);
-        X_grad(i, :) = (X(i,:)*Ttemp' - Ytemp)*Ttemp;
-        % Theta_grad(j, :) = (X(i,:)*Ttemp' - Ytemp)*X(i,:);
-    end
+E = (X*Theta' - Y).*R;
+J = sum(sum(E.^2))/2;
+J_reg = sum(sum(Theta.^2))*lambda/2 + sum(sum(X.^2))*lambda/2;
+J = J + J_reg;
+X_reg = lambda*X;
+Theta_reg = lambda*Theta;
+% Method 1:(Vectorization algorithm)
+% X_grad = E*Theta;
+% Theta_grad = E'*X;
+% Method 2:
+for i=1:size(Y,1)
+    idx = find(R(i, :)==1);
+    Theta_temp = Theta(idx, :);
+    Y_temp = Y(i, idx);
+    X_grad(i, :) = (X(i,:)*Theta_temp' - Y_temp)*Theta_temp;
 end
-
-
-
-
-
-
-
-
+for j=1:size(Y,2)
+    idx = find(R(:, j)==1);
+    X_temp = X(idx, :);
+    Y_temp = Y(idx, j);
+    Theta_grad(j, :) = (X_temp*Theta(j,:)' - Y_temp)'*X_temp;
+end
+Theta_grad = Theta_grad + Theta_reg;
+X_grad = X_grad + X_reg;
 
 
 
